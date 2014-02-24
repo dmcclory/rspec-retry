@@ -26,8 +26,10 @@ module RSpec
               end
             end
             @example.clear_exception
-            if RSpec.configuration.run_before_retry_block
-              RSpec.configuration.run_before_retry_block.call
+            if i > 0
+              if RSpec.configuration.run_before_retry_block
+                RSpec.configuration.run_before_retry_block.call
+              end
             end
             example.run
 
