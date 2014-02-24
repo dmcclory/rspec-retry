@@ -9,6 +9,7 @@ module RSpec
         config.add_setting :verbose_retry, :default => false
         config.add_setting :default_retry_count, :default => 1
         config.add_setting :clear_lets_on_failure, :default => true
+        config.add_setting :run_before_retry_block, :default => nil
 
         config.around(:each) do |example|
           retry_count = example.metadata[:retry] || RSpec.configuration.default_retry_count
@@ -25,6 +26,9 @@ module RSpec
               end
             end
             @example.clear_exception
+            if RSpec.configuration.run_before_retry_block
+              RSpec.configuration.run_before_retry_block.call
+            end
             example.run
 
             break if @example.exception.nil?
